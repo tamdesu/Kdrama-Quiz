@@ -1,0 +1,67 @@
+{
+  "questions": [
+    {
+      "author": "wooseokx",
+      "question": "Who is the highest paid actor in Korea?",
+      "options": [
+        "A. Kim Soo-hyun",
+        "B. Song Kang",
+        "C. Cha eunwoo",
+        "D. Lee Jae-wook"
+      ],
+      "answer": "A",
+      "attachments": []
+    },
+    {
+      "author": "wooseokx",
+      "question": "Who is the highest paid actress in Korea?",
+      "options": [
+        "A. Bae Suzy",
+        "B. Jun ji-hyun",
+        "C. Seo yeji",
+        "D. Kim hyeyoon"
+      ],
+      "answer": "B",
+      "attachments": []
+    },
+    {
+      "author": "wooseokx",
+      "question": "Which actor is known for romantic kdramas?",
+      "options": [
+        "A. Choi hyunwook",
+        "B. Park jihoon",
+        "C. Rowoon",
+        "D. Songkang"
+      ],
+      "answer": "D",
+      "attachments": []
+    },
+    {
+      "author": "amyloveskanye",
+      "question": "What drama is this?",
+      "options": [
+        "a. High Cookie",
+        "b. Weak Hero Class 1",
+        "c. Twinkling Watermelon",
+        "d. D.P."
+      ],
+      "answer": "c",
+      "attachments": [
+        "https://media1.tenor.com/m/KEBoRU3IGGUAAAAd/ryeounchoi-ryeoun-choi.gif"
+      ]
+    },
+    {
+      "author": "wooseokx",
+      "question": "Which two kdramas started airing at the same time in 2023 and gained a lot of fame?",
+      "options": [
+        "A. King the land & see you in my 19th life",
+        "B. Heartbeat & Perfect stranger",
+        "C. Death's game & Destined with you",
+        "D. My demon & King the land"
+      ],
+      "answer": "A",
+      "attachments": []
+    }
+    
+  ]
+}
