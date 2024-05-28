@@ -3,12 +3,12 @@ const getApplicationCommands = require('../../utils/getApplicationCommands');
 const getLocalCommands = require('../../utils/getLocalCommands');
 
 module.exports = async (client) => {
-  
+
   try {
     const guilds = client.guilds.cache;
     guilds.forEach(async (testServer) =>{
-      
-    
+
+
     const localCommands = getLocalCommands();
     const applicationCommands = await getApplicationCommands(
       client,

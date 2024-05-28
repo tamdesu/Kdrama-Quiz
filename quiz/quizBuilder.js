@@ -1,17 +1,7 @@
 const {EmbedBuilder} = require('discord.js');
-var {questions} = require('../questions.json');
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-questions = shuffleArray(questions);
-let qIndex = 0;
 
 
-const Quiz = async (client) =>{
+const Quiz = async (client,questions, qIndex) =>{
   const q = questions[qIndex % questions.length]
   const embed = new EmbedBuilder();
   embed.setTitle('KDrama Quiz')
@@ -29,7 +19,6 @@ const Quiz = async (client) =>{
     options: q.options,
     ans: q.answer.toUpperCase()  
   }
-  qIndex++;
   return ob;
 }
 
