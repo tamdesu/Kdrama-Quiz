@@ -14,14 +14,8 @@ let qIndex = 0;
 const Quiz = async (client) =>{
   const q = questions[qIndex % questions.length]
   const embed = new EmbedBuilder();
-  embed.setTitle('Quiz')
-  .setDescription(`**QUESTION: ${q.question.toUpperCase()}**`)
-  .addFields(
-    {name: ' ', value: `**${q.options[0].toUpperCase()}**`},
-    {name: ' ', value: `**${q.options[1].toUpperCase()}**`},
-    {name: ' ', value: `**${q.options[2].toUpperCase()}**`},
-    {name: ' ', value: `**${q.options[3].toUpperCase()}**`},
-  )
+  embed.setTitle('KDrama Quiz')
+  .setDescription(`**QUESTION: \n\n${q.question.toUpperCase()}**`)
   .setThumbnail("https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-tricolor-minimalist-style-question-mark-image_1195548.jpg")
   .setFooter({ text: `question author: ${q.author}`, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 1024 })})
   .setColor(0xFABCA7)
@@ -31,6 +25,7 @@ const Quiz = async (client) =>{
   }
   const ob = {
     ques: embed,
+    options: q.options,
     ans: q.answer.toUpperCase()  
   }
   qIndex++;

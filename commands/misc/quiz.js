@@ -6,10 +6,10 @@ module.exports = {
 
   callback: async (client, interaction) => {   
       const quiz = await Quiz(client);
-      const buttonA = new ButtonBuilder().setLabel('A').setEmoji('💛').setStyle(ButtonStyle.Primary).setCustomId('option-a')
-      const buttonB = new ButtonBuilder().setLabel('B').setEmoji('💙').setStyle(ButtonStyle.Primary).setCustomId('option-b')
-      const buttonC = new ButtonBuilder().setLabel('C').setEmoji('💜').setStyle(ButtonStyle.Primary).setCustomId('option-c')
-      const buttonD = new ButtonBuilder().setLabel('D').setEmoji('🤍').setStyle(ButtonStyle.Primary).setCustomId('option-d')
+      const buttonA = new ButtonBuilder().setLabel(quiz.options[0].toUpperCase()).setEmoji('💛').setStyle(ButtonStyle.Primary).setCustomId('option-a')
+      const buttonB = new ButtonBuilder().setLabel(quiz.options[1].toUpperCase()).setEmoji('💙').setStyle(ButtonStyle.Primary).setCustomId('option-b')
+      const buttonC = new ButtonBuilder().setLabel(quiz.options[2].toUpperCase()).setEmoji('🩷').setStyle(ButtonStyle.Primary).setCustomId('option-c')
+      const buttonD = new ButtonBuilder().setLabel(quiz.options[3].toUpperCase()).setEmoji('🤍').setStyle(ButtonStyle.Primary).setCustomId('option-d')
       const row = new ActionRowBuilder().addComponents(buttonA, buttonB, buttonC, buttonD)
       
       interaction.reply({embeds: [quiz.ques], components: [row]});
