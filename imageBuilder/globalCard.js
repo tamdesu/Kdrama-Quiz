@@ -3,7 +3,7 @@ const axios = require('axios');
 const path = require('path');
 const Jimp = require('jimp');
 
-const generateProfileCard = async ({ username, displayName, exp, totalExp, targetExp, guildName, avatarUrl, level }) => {
+const generateProfileCard = async ({ username, displayName, exp, totalExp, targetExp, avatarUrl, level }) => {
   try {
     // Fetch the image buffer using axios
     const fetchImageBuffer = async (url) => {
@@ -81,14 +81,14 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
 
     ctx.fillStyle = 'white';
     ctx.font = '22px Arial';
-    ctx.fillText("Server: " + guildName , 100, 240);
+    ctx.fillText("Global" , 100, 240);
 
     ctx.font = '14px Arial';
     ctx.fillText(`Exp: ${exp}/${targetExp}`, 100, 280);
     ctx.fillText(`Total Exp: ${totalExp}`, 620 - String(totalExp).length * 6, 280);
 
     ctx.font = '12px Arial';
-    ctx.fillText("/ guildprofile", 620, 340);
+    ctx.fillText("/ globalprofile", 620, 340);
 
     // Return the buffer
     return canvas.toBuffer('image/png');

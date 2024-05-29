@@ -1,11 +1,11 @@
 const { EmbedBuilder, ApplicationCommandOptionType} = require('discord.js');
-const Level = require('../../models/Level.js');
-const { generateProfileCard } = require('../../imageBuilder/profileCard.js');
+const Player = require('../../models/Player.js');
+const { generateProfileCard } = require('../../imageBuilder/globalCard.js');
 
 module.exports = {
-    name: "guildprofile",
-    aliases: ['guild profile'],
-    description: "Shows user's profile card for this server",
+    name: "globalprofile",
+    aliases: ['global profile'],
+    description: "Shows user's global profile card",
     options: [
         {
             name: 'user',
@@ -20,9 +20,8 @@ module.exports = {
             
             const query = {
                 userId: user.id,
-                guildId: interaction.guild.id
             }
-            const player = await Level.findOne(query);
+            const player = await Player.findOne(query);
             if (player){
                 await interaction.deferReply();
 
@@ -38,14 +37,13 @@ module.exports = {
                         exp: player.exp,
                         totalExp: player.totalExp,
                         targetExp: player.targetExp,
-                        guildName: interaction.guild.name,
                         avatarUrl: avUrl,
                         level: player.level
                     });
                     
                     const cardEmbed = new EmbedBuilder()
                     //const attachment = new Attachment(profileCardBuffer, 'profile_card.png');
-                    cardEmbed.setTitle(`${user.globalName}'s Server Profile`)
+                    cardEmbed.setTitle(`${user.globalName}'s Global Profile`)
                     .setDescription('\n')
                     .setImage("attachment://profile_card.png")
                     .setColor(0xFABCA7)

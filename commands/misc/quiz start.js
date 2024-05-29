@@ -313,7 +313,9 @@ module.exports = {
                          }
                          answeredUsers.clear();
                          
+                         if(sessions[interaction.guild.id]){
                              await sendQuiz(interaction.channel);
+                         }
                          }
                      }
                 });

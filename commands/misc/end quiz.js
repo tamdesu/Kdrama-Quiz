@@ -2,7 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const {sessions} = require('../../session.json');
 const Level = require('../../models/Level.js');
 const Player = require('../../models/Player.js');
-const calculateLevelXp = require('../../utils/calculateLevelXp.js');
+
 module.exports = {
     name: "endquiz",
     aliases: ['quiz end'],
@@ -22,7 +22,7 @@ module.exports = {
             if(sessions[interaction.guild.id]){
                 let session = sessions[interaction.guild.id].session
                 
-                if(session[interaction.user.id].isInitiator){
+                if(session[interaction.user.id] && session[interaction.user.id].isInitiator){
                 
                 
                  let scorearr = Object.entries(sortSessionByScores(session));
