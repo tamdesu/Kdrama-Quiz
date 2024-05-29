@@ -1,10 +1,11 @@
 const { createCanvas, loadImage } = require('canvas');
 const axios = require('axios');
-const sharp = require('sharp');
 const path = require('path');
+const Jimp = require('jimp');
 
 const generateProfileCard = async ({ username, displayName, exp, totalExp, avatarUrl, level }) => {
   try {
+    // Fetch the image buffer using axios
     const fetchImageBuffer = async (url) => {
       try {
         const res = await axios.get(url, { responseType: 'arraybuffer' });
@@ -16,11 +17,17 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
     };
 
     let avatarBuffer, avatarImg, backgroundImg;
-    // Load avatar and background images
+    // Load the avatar and background images
     try {
       avatarBuffer = await fetchImageBuffer(avatarUrl);
-      const avatarPngBuffer = await sharp(avatarBuffer).png().toBuffer();
-      avatarImg = await loadImage(avatarPngBuffer);
+
+      // Use Jimp to read the image and convert it to PNG
+      const avatarJimp = await Jimp.read(avatarBuffer);
+      avatarJimp.getBuffer(Jimp.MIME_PNG, async (err, buffer) => {
+        if (err) throw err;
+        avatarImg = await loadImage(buffer);
+      });
+
       backgroundImg = await loadImage(path.join(__dirname, './background.png'));
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -30,14 +37,14 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
     const canvas = createCanvas(800, 400);
     const ctx = canvas.getContext('2d');
 
-    // Draw background
+    // Draw the background
     ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 
-    // Draw card background
+    // Draw the card background
     ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
     ctx.fillRect(30, 30, canvas.width - 60, canvas.height - 60);
 
-    // Draw circular avatar
+    // Draw the circular avatar
     const diameter = 120;
     ctx.save();
     ctx.beginPath();

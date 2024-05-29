@@ -13,12 +13,16 @@ module.exports = {
         try{
             try {
                 await interaction.deferReply()
+                const av = interaction.user.displayAvatarURL({ format: 'png', size: 4096 })
+                const avArr = av.split('.')
+                const ext = ".png?size=4096"
+                const avUrl = avArr[0] + '.' + avArr[1] + '.' + avArr[2] + ext
                 const profileCardBuffer = await generateProfileCard({
                     username: interaction.user.tag,
                     displayName: interaction.user.globalName,
                     exp: 735,
                     totalExp: 1200,
-                    avatarUrl: interaction.user.displayAvatarURL({ format: 'png', size: 4096 }),
+                    avatarUrl: avUrl,
                     level: 3
                   });
                   
