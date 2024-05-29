@@ -11,20 +11,23 @@ module.exports = {
 
 
         try{
-                const user = interaction.user;
-                const avatarUrl = user.displayAvatarURL({ format: 'png', size: 4096 });
+            try {
+                  await generateProfileCard({
+                    username: user.username,
+                    displayName: user.tag,
+                    exp: 735,
+                    totalExp: 1200,
+                    avatarUrl,
+                    level: 3
+                  });
 
-                const profileCardBuffer = await generateProfileCard({
-                  username: user.username,
-                  displayName: user.tag,
-                  exp: 735,
-                  totalExp: 1200,
-                  avatarUrl,
-                  level: 3
-                });
-
-                const attachment = new MessageAttachment(profileCardBuffer, 'profileCard.png');
-                await interaction.reply({ files: [attachment] });
+                  const profileCardBuffer = fs.readFileSync('profileCard.png');
+                  const attachment = new MessageAttachment(profileCardBuffer, 'profileCard.png');
+                  await interaction.reply({ files: [attachment] });
+                } catch (error) {
+                  console.error('Error generating profile card:', error);
+                  await interaction.reply('Failed to generate profile card.');
+                }
 
         }
         catch(err){
