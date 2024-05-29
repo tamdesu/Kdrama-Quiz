@@ -43,6 +43,9 @@ module.exports = {
                     await interaction.editReply('Failed to generate profile card.');
                 }
             }
+            else{
+                await interaction.reply('You have not started the game yet. Type `/quizstart` to begin.');
+            }
         } catch (err) {
             console.error(err);
             interaction.reply({ content: 'There has been an error! Please try using the command again.', ephemeral: true });
