@@ -1,4 +1,5 @@
-const p5 = require('node-p5');
+const { createCanvas, loadImage } = require('canvas');
+const p5 = require('p5');
 const fs = require('fs');
 const fetch = require('node-fetch');
 
@@ -11,41 +12,43 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
   };
 
   // Initialize images to be used in preload
-  let avatarBuffer, avatarImg, backgroundImg;
+  let avatarBuffer;
+  let avatarImg;
+  let backgroundImg;
 
   try {
     avatarBuffer = await fetchImageBuffer(avatarUrl);
+    avatarImg = await loadImage(avatarBuffer);
+    backgroundImg = await loadImage('./background.webp');
   } catch (error) {
-    console.error('Error fetching avatar image:', error);
+    console.error('Error fetching images:', error);
     throw error;
   }
 
+  // Define the sketch
   const sketch = (p) => {
-    p.preload = () => {
-      // Convert avatar buffer to image
-      avatarImg = p.loadImage(avatarBuffer);
-      backgroundImg = p.loadImage('./background.webp');
-    };
-
     p.setup = () => {
       const width = 800;
       const height = 400;
+      const avatarDiameter = 120;
 
-      p.createCanvas(800, 400);
+      const canvas = createCanvas(width, height);
+      p.drawingContext = canvas.getContext('2d');
+      p.createCanvas(width, height);
 
       // Draw background
-      p.image(backgroundImg, 0, 0, 800, 400);
+      p.image(backgroundImg, 0, 0, width, height);
 
       // Draw overlay
       p.fill('rgba(0, 0, 0, 0.45)');
       p.noStroke();
-      p.rect(30, 30, 800 - 60, 400 - 60, 12, 12);
+      p.rect(30, 30, width - 60, height - 60, 12, 12);
 
       // Draw avatar
       p.ellipseMode(p.CENTER);
       p.imageMode(p.CENTER);
-      p.ellipse(120, 110, 120, 120);
-      p.image(avatarImg, 120, 110, 120, 120);
+      p.ellipse(120, 110, avatarDiameter, avatarDiameter);
+      p.image(avatarImg, 120, 110, avatarDiameter, avatarDiameter);
 
       // Draw texts
       p.fill(255);
@@ -58,7 +61,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
 
       p.textSize(40);
       p.fill(255);
-      p.text(`Level: ${level}`, 800 - 210, 120);
+      p.text(`Level: ${level}`, width - 210, 120);
 
       p.textSize(22);
       p.text("Server: Otaku Realm", 100, 240);
@@ -72,31 +75,20 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
 
       // Experience bar
       p.fill('rgba(255, 255, 255, 0.16)');
-      p.rect(100, 290, 800 - 200, 30, 4, 4);
+      p.rect(100, 290, width - 200, 30, 4, 4);
 
       p.fill('#fff');
-      p.rect(100, 290, (800 - 200) * (exp / totalExp), 30, 4, 4);
+      p.rect(100, 290, (width - 200) * (exp / totalExp), 30, 4, 4);
 
       // Convert canvas to buffer
       p.loadPixels();
-      const buffer = p.canvas.toBuffer();
-      return buffer;
-    };
-
-    p.draw = () => {
-      // No need to loop
-      p.noLoop();
+      const buffer = canvas.toBuffer('image/png');
+      fs.writeFileSync('profileCard.png', buffer);
     };
   };
 
-  // Initialize p5 instance and return the buffer after setup completes
-  const p5Instance = p5.createSketch(sketch);
-  return new Promise((resolve) => {
-    p5Instance.then((p) => {
-      const buffer = p.canvas.toBuffer();
-      resolve(buffer);
-    });
-  });
+  // Initialize p5 instance
+  new p5(sketch);
 };
 
 module.exports = { generateProfileCard };
