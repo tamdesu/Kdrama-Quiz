@@ -11,27 +11,20 @@ module.exports = {
 
 
         try{
-            const user = interaction.user;
+                const user = interaction.user;
+                const avatarUrl = user.displayAvatarURL({ format: 'png', size: 4096 });
 
-            //await interaction.deferReply();
+                const profileCardBuffer = await generateProfileCard({
+                  username: user.username,
+                  displayName: user.tag,
+                  exp: 735,
+                  totalExp: 1200,
+                  avatarUrl,
+                  level: 3
+                });
 
-            try {
-              const reply = await interaction.reply("loading image")
-              const buffer = await generateProfileCard({
-                username: user.tag,
-                displayName: user.tag,
-                exp: 735, // Example data
-                totalExp: 1200, // Example data
-                avatarUrl: user.displayAvatarURL({ format: 'png' }),
-                level: 3 // Example data
-              });
-              
-              await reply.edit({
-                files: [{
-                  attachment: buffer,
-                  name: 'profile-card.png'
-                }]
-              });
+                const attachment = new MessageAttachment(profileCardBuffer, 'profileCard.png');
+                await interaction.reply({ files: [attachment] });
 
             } catch (error) {
               console.error(error);

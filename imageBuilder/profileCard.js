@@ -1,78 +1,87 @@
 const p5 = require('node-p5');
+const fs = require('fs');
+const fetch = require('node-fetch');
 
 const generateProfileCard = async ({ username, displayName, exp, totalExp, avatarUrl, level }) => {
-  const resourcesToPreload = {
-    avatar: p5.loadImage(avatarUrl)
+  const preload = (p) => {
+    p.backgroundImg = p.loadImage('./background.webp');
+    p.avatarImg = p.loadImage(avatarUrl);
   };
 
-  function sketch(p, preloaded) {
-    let avatar = preloaded.avatar;
+  const setup = (p) => {
+    const width = 800;
+    const height = 400;
+    const avatarDiameter = 120;
 
+    p.createCanvas(width, height);
+
+    // Draw background
+    p.image(p.backgroundImg, 0, 0, width, height);
+
+    // Draw overlay
+    p.fill('rgba(0, 0, 0, 0.45)');
+    p.noStroke();
+    p.rect(30, 30, width - 60, height - 60, 12, 12);
+
+    // Draw avatar
+    p.ellipseMode(p.CENTER);
+    p.imageMode(p.CENTER);
+    p.ellipse(120, 110, avatarDiameter, avatarDiameter);
+    p.image(p.avatarImg, 120, 110, avatarDiameter, avatarDiameter);
+
+    // Draw texts
+    p.fill(255);
+    p.textSize(44);
+    p.text(displayName, 190, 120);
+
+    p.textSize(18);
+    p.fill(70);
+    p.text(`~${username}`, 190, 145);
+
+    p.textSize(40);
+    p.fill(255);
+    p.text(`Level: ${level}`, width - 210, 120);
+
+    p.textSize(22);
+    p.text("Server: Otaku Realm", 100, 240);
+
+    p.textSize(14);
+    p.text(`Exp: ${exp}/${totalExp}`, 100, 280);
+    p.text(`Total Exp: ${totalExp}`, 598, 280);
+
+    p.textSize(10);
+    p.text("/ guildprofile", 640, 340);
+
+    // Experience bar
+    p.fill('rgba(255, 255, 255, 0.16)');
+    p.rect(100, 290, width - 200, 30, 4, 4);
+
+    p.fill('#fff');
+    p.rect(100, 290, (width - 200) * (exp / totalExp), 30, 4, 4);
+
+    // Convert canvas to buffer
+    const buffer = p.canvas.toBuffer();
+    return buffer;
+  };
+
+  const sketch = (p) => {
+    p.preload = () => preload(p);
     p.setup = () => {
-      let canvas = p.createCanvas(800, 400);
-      p.background(220);
-      p.fill("#00000075");
-      p.noStroke();
-      p.rect(30, 30, p.width - 60, p.height - 60, 12, 12);
-
-      let diameter = 120;
-
-      // Create a circular mask
-      let mask = p.createGraphics(diameter, diameter);
-      mask.ellipse(diameter / 2, diameter / 2, diameter, diameter);
-
-      // Apply the mask to the avatar
-      avatar.mask(mask);
-
-      // Draw the masked avatar
-      p.image(avatar, 60, 50, diameter, diameter);
-
-      p.textSize(44);
-      p.fill(255);
-      p.text(displayName, 190, 120);
-      p.textSize(18);
-      p.fill(70);
-      p.text(`~${username}`, 190, 145);
-      p.textSize(40);
-      p.fill(255);
-      p.textStyle(p.BOLD);
-      p.text(`Level: ${level}`, p.width - 210, 120);
-
-      p.strokeWeight(3);
-      p.stroke(255);
-      p.fill("#00000000");
-      p.rect(60, 190, p.width - 120, 160, 12, 12);
-      p.strokeWeight(1);
-      p.fill('#ffffff28');
-      p.rect(100, 290, p.width - 200, 30, 4, 4);
-      p.fill('#fff');
-      p.rect(100, 290, (p.width - 200) * (exp / totalExp), 30, 4, 4);
-      p.textSize(22);
-      p.textStyle(p.BOLD);
-      p.noStroke();
-      p.text("Server: Otaku Realm", 100, 240);
-      p.textSize(14);
-      p.textStyle(p.BOLD);
-      p.noStroke();
-      p.text(`Exp: ${exp}/${totalExp}`, 100, 280);
-      p.text(`Total Exp: ${totalExp}`, 598, 280);
-      p.textSize(10);
-      p.text("/ guildprofile", 640, 340);
-
+      const buffer = setup(p);
+      fs.writeFileSync('./profileCard.png', buffer);
       p.noLoop();
     };
-  }
+  };
 
-  return new Promise((resolve, reject) => {
-    const p5Instance = p5.createSketch(sketch, resourcesToPreload);
-    setTimeout(() => {
-      const canvas = p5Instance.canvas;
-      if (canvas) {
-        resolve(canvas.toBuffer());
-      } else {
-        reject(new Error('Failed to generate profile card.'));
-      }
-    }, 5000); // Adjust timeout as necessary
+  // Initialize p5 instance
+  const p5Instance = p5.createSketch(sketch);
+
+  // Wait for the sketch to complete
+  return new Promise((resolve) => {
+    p5Instance.then(() => {
+      const buffer = fs.readFileSync('./profileCard.png');
+      resolve(buffer);
+    });
   });
 };
 
