@@ -30,23 +30,22 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
     p.setup = () => {
       const width = 800;
       const height = 400;
-      const avatarDiameter = 120;
 
-      p.createCanvas(width, height);
+      p.createCanvas(800, 400);
 
       // Draw background
-      p.image(backgroundImg, 0, 0, width, height);
+      p.image(backgroundImg, 0, 0, 800, 400);
 
       // Draw overlay
       p.fill('rgba(0, 0, 0, 0.45)');
       p.noStroke();
-      p.rect(30, 30, width - 60, height - 60, 12, 12);
+      p.rect(30, 30, 800 - 60, 400 - 60, 12, 12);
 
       // Draw avatar
       p.ellipseMode(p.CENTER);
       p.imageMode(p.CENTER);
-      p.ellipse(120, 110, avatarDiameter, avatarDiameter);
-      p.image(avatarImg, 120, 110, avatarDiameter, avatarDiameter);
+      p.ellipse(120, 110, 120, 120);
+      p.image(avatarImg, 120, 110, 120, 120);
 
       // Draw texts
       p.fill(255);
@@ -59,7 +58,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
 
       p.textSize(40);
       p.fill(255);
-      p.text(`Level: ${level}`, width - 210, 120);
+      p.text(`Level: ${level}`, 800 - 210, 120);
 
       p.textSize(22);
       p.text("Server: Otaku Realm", 100, 240);
@@ -73,10 +72,10 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
 
       // Experience bar
       p.fill('rgba(255, 255, 255, 0.16)');
-      p.rect(100, 290, width - 200, 30, 4, 4);
+      p.rect(100, 290, 800 - 200, 30, 4, 4);
 
       p.fill('#fff');
-      p.rect(100, 290, (width - 200) * (exp / totalExp), 30, 4, 4);
+      p.rect(100, 290, (800 - 200) * (exp / totalExp), 30, 4, 4);
 
       // Convert canvas to buffer
       p.loadPixels();
