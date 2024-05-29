@@ -3,7 +3,7 @@ const axios = require('axios');
 const path = require('path');
 const Jimp = require('jimp');
 
-const generateProfileCard = async ({ username, displayName, exp, totalExp, avatarUrl, level }) => {
+const generateProfileCard = async ({ username, displayName, exp, totalExp, targetExp, avatarUrl, level }) => {
   try {
     // Fetch the image buffer using axios
     const fetchImageBuffer = async (url) => {
@@ -75,14 +75,14 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, avata
     ctx.fillRect(100, 290, canvas.width - 200, 30);
 
     ctx.fillStyle = 'white';
-    ctx.fillRect(100, 290, (canvas.width - 200) * (exp / totalExp), 30);
+    ctx.fillRect(100, 290, (canvas.width - 200) * (exp / targetExp), 30);
 
     ctx.fillStyle = 'white';
     ctx.font = '22px Arial';
     ctx.fillText("Server: Otaku Realm", 100, 240);
 
     ctx.font = '14px Arial';
-    ctx.fillText(`Exp: ${exp}/${totalExp}`, 100, 280);
+    ctx.fillText(`Exp: ${exp}/${targetExp}`, 100, 280);
     ctx.fillText(`Total Exp: ${totalExp}`, 598, 280);
 
     ctx.font = '10px Arial';
