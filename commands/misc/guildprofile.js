@@ -28,6 +28,7 @@ module.exports = {
                         exp: player.exp,
                         totalExp: player.totalExp,
                         targetExp: player.targetExp,
+                        guildName: interaction.guild.name,
                         avatarUrl: avUrl,
                         level: player.level
                     });

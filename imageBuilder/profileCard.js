@@ -3,7 +3,7 @@ const axios = require('axios');
 const path = require('path');
 const Jimp = require('jimp');
 
-const generateProfileCard = async ({ username, displayName, exp, totalExp, targetExp, avatarUrl, level }) => {
+const generateProfileCard = async ({ username, displayName, exp, totalExp, targetExp, guildName, avatarUrl, level }) => {
   try {
     // Fetch the image buffer using axios
     const fetchImageBuffer = async (url) => {
@@ -16,7 +16,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
       }
     };
 
-    let avatarBuffer, avatarImg, backgroundImg;
+    let avatarBuffer, avatarImg, backgroundImg, badgeImg;
     // Load the avatar and background images
     try {
       avatarBuffer = await fetchImageBuffer(avatarUrl);
@@ -29,6 +29,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
       });
 
       backgroundImg = await loadImage(path.join(__dirname, './background.png'));
+      badgeImg = await loadImage(path.join(__dirname, './badge.png'));
     } catch (error) {
       console.error('Error fetching images:', error);
       throw error;
@@ -54,6 +55,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
     ctx.drawImage(avatarImg, 60, 50, diameter, diameter);
     ctx.restore();
 
+    ctx.drawImage(badgeImg, canvas.width - 50, 80, 80);
     // Draw text and other elements
     ctx.fillStyle = 'white';
     ctx.font = '44px Arial';
@@ -65,7 +67,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
 
     ctx.fillStyle = 'white';
     ctx.font = '40px Arial';
-    ctx.fillText(`Level: ${level}`, canvas.width - 210, 120);
+    ctx.fillText(`Level: ${level}`, canvas.width - 180, 237);
 
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 3;
@@ -79,7 +81,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
 
     ctx.fillStyle = 'white';
     ctx.font = '22px Arial';
-    ctx.fillText("Server: Otaku Realm", 100, 240);
+    ctx.fillText("Server: " + guildName, 100, 240);
 
     ctx.font = '14px Arial';
     ctx.fillText(`Exp: ${exp}/${targetExp}`, 100, 280);
