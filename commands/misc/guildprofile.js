@@ -12,18 +12,22 @@ module.exports = {
 
         try{
             try {
-                  await generateProfileCard({
-                    username: user.username,
-                    displayName: user.tag,
+                await interaction.deferReply()
+                const profileCardBuffer = await generateProfileCard({
+                    username: interaction.user.tag,
+                    displayName: interaction.user.globalName,
                     exp: 735,
                     totalExp: 1200,
-                    avatarUrl,
+                    avatarUrl: interaction.user.displayAvatarURL({ format: 'png', size: 4096 }),
                     level: 3
                   });
-
-                  const profileCardBuffer = fs.readFileSync('profileCard.png');
-                  const attachment = new MessageAttachment(profileCardBuffer, 'profileCard.png');
-                  await interaction.reply({ files: [attachment] });
+                  
+                await interaction.channel.send({
+                    files: [{
+                      attachment: profileCardBuffer,
+                      name: 'profile-card.png'
+                    }]
+                  });
                 } catch (error) {
                   console.error('Error generating profile card:', error);
                   await interaction.reply('Failed to generate profile card.');
@@ -32,7 +36,7 @@ module.exports = {
         }
         catch(err){
             console.error(err)
-            interaction.channel.send("There has been an error! Please try using the command again")
+            interaction.reply({content: err, ephmeral: true})
         }
     },
 };

@@ -1,94 +1,91 @@
 const { createCanvas, loadImage } = require('canvas');
-const p5 = require('p5');
-const fs = require('fs');
-const fetch = require('node-fetch');
+const axios = require('axios');
+const sharp = require('sharp');
+const path = require('path');
 
 const generateProfileCard = async ({ username, displayName, exp, totalExp, avatarUrl, level }) => {
-  // Fetch the avatar image as a buffer
-  const fetchImageBuffer = async (url) => {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to fetch image: ${res.statusText}`);
-    return res.buffer();
-  };
-
-  // Initialize images to be used in preload
-  let avatarBuffer;
-  let avatarImg;
-  let backgroundImg;
-
   try {
-    avatarBuffer = await fetchImageBuffer(avatarUrl);
-    avatarImg = await loadImage(avatarBuffer);
-    backgroundImg = await loadImage('./background.webp');
-  } catch (error) {
-    console.error('Error fetching images:', error);
-    throw error;
-  }
-
-  // Define the sketch
-  const sketch = (p) => {
-    p.setup = () => {
-      const width = 800;
-      const height = 400;
-      const avatarDiameter = 120;
-
-      const canvas = createCanvas(width, height);
-      p.drawingContext = canvas.getContext('2d');
-      p.createCanvas(width, height);
-
-      // Draw background
-      p.image(backgroundImg, 0, 0, width, height);
-
-      // Draw overlay
-      p.fill('rgba(0, 0, 0, 0.45)');
-      p.noStroke();
-      p.rect(30, 30, width - 60, height - 60, 12, 12);
-
-      // Draw avatar
-      p.ellipseMode(p.CENTER);
-      p.imageMode(p.CENTER);
-      p.ellipse(120, 110, avatarDiameter, avatarDiameter);
-      p.image(avatarImg, 120, 110, avatarDiameter, avatarDiameter);
-
-      // Draw texts
-      p.fill(255);
-      p.textSize(44);
-      p.text(displayName, 190, 120);
-
-      p.textSize(18);
-      p.fill(70);
-      p.text(`~${username}`, 190, 145);
-
-      p.textSize(40);
-      p.fill(255);
-      p.text(`Level: ${level}`, width - 210, 120);
-
-      p.textSize(22);
-      p.text("Server: Otaku Realm", 100, 240);
-
-      p.textSize(14);
-      p.text(`Exp: ${exp}/${totalExp}`, 100, 280);
-      p.text(`Total Exp: ${totalExp}`, 598, 280);
-
-      p.textSize(10);
-      p.text("/ guildprofile", 640, 340);
-
-      // Experience bar
-      p.fill('rgba(255, 255, 255, 0.16)');
-      p.rect(100, 290, width - 200, 30, 4, 4);
-
-      p.fill('#fff');
-      p.rect(100, 290, (width - 200) * (exp / totalExp), 30, 4, 4);
-
-      // Convert canvas to buffer
-      p.loadPixels();
-      const buffer = canvas.toBuffer('image/png');
-      fs.writeFileSync('profileCard.png', buffer);
+    const fetchImageBuffer = async (url) => {
+      try {
+        const res = await axios.get(url, { responseType: 'arraybuffer' });
+        return Buffer.from(res.data, 'binary');
+      } catch (error) {
+        console.error('Error fetching image buffer:', error);
+        throw error;
+      }
     };
-  };
 
-  // Initialize p5 instance
-  new p5(sketch);
+    let avatarBuffer, avatarImg, backgroundImg;
+    // Load avatar and background images
+    try {
+      avatarBuffer = await fetchImageBuffer(avatarUrl);
+      const avatarPngBuffer = await sharp(avatarBuffer).png().toBuffer();
+      avatarImg = await loadImage(avatarPngBuffer);
+      backgroundImg = await loadImage(path.join(__dirname, './background.png'));
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      throw error;
+    }
+
+    const canvas = createCanvas(800, 400);
+    const ctx = canvas.getContext('2d');
+
+    // Draw background
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+
+    // Draw card background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+    ctx.fillRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+    // Draw circular avatar
+    const diameter = 120;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(60 + diameter / 2, 50 + diameter / 2, diameter / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(avatarImg, 60, 50, diameter, diameter);
+    ctx.restore();
+
+    // Draw text and other elements
+    ctx.fillStyle = 'white';
+    ctx.font = '44px Arial';
+    ctx.fillText(displayName, 190, 120);
+
+    ctx.fillStyle = 'rgba(70, 70, 70, 1)';
+    ctx.font = '18px Arial';
+    ctx.fillText(`~${username}`, 190, 145);
+
+    ctx.fillStyle = 'white';
+    ctx.font = '40px Arial';
+    ctx.fillText(`Level: ${level}`, canvas.width - 210, 120);
+
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(60, 190, canvas.width - 120, 160);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+    ctx.fillRect(100, 290, canvas.width - 200, 30);
+
+    ctx.fillStyle = 'white';
+    ctx.fillRect(100, 290, (canvas.width - 200) * (exp / totalExp), 30);
+
+    ctx.fillStyle = 'white';
+    ctx.font = '22px Arial';
+    ctx.fillText("Server: Otaku Realm", 100, 240);
+
+    ctx.font = '14px Arial';
+    ctx.fillText(`Exp: ${exp}/${totalExp}`, 100, 280);
+    ctx.fillText(`Total Exp: ${totalExp}`, 598, 280);
+
+    ctx.font = '10px Arial';
+    ctx.fillText("/ guildprofile", 640, 340);
+
+    // Return the buffer
+    return canvas.toBuffer('image/png');
+  } catch (error) {
+    throw new Error('Error generating profile card: ' + error.message);
+  }
 };
 
 module.exports = { generateProfileCard };

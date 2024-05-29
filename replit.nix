@@ -1,5 +1,6 @@
-{pkgs}: {
+{ pkgs }: {
   deps = [
-    pkgs.libossp_uuid
-   ];
+    pkgs.python310
+    pkgs.libuuid
+  ];
 }

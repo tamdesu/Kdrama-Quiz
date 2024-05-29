@@ -325,7 +325,7 @@ module.exports = {
         }
         catch(err){
             console.error(err)
-            interaction.channel.send("There has been an error! Please try using the command again")
+            interaction.channel.send(err)
         }
     },
 };
