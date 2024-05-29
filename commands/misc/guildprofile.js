@@ -26,10 +26,6 @@ module.exports = {
                 const attachment = new MessageAttachment(profileCardBuffer, 'profileCard.png');
                 await interaction.reply({ files: [attachment] });
 
-            } catch (error) {
-              console.error(error);
-              await interaction.followUp('There was an error generating the profile card.');
-            }
         }
         catch(err){
             console.error(err)
