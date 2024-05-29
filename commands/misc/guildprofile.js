@@ -32,7 +32,7 @@ module.exports = {
                   console.error('Error generating profile card:', error);
                   await interaction.reply('Failed to generate profile card.');
                 }
-
+ 
         }
         catch(err){
             console.error(err)
