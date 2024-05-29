@@ -2,6 +2,9 @@ const Quiz = require('../../quiz/quizBuilder.js');
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType, EmbedBuilder } = require('discord.js');
 const {sessions} = require('../../session.json');
 var {questions} = require('../../questions.json');
+const Level = require('../../models/Level.js');
+const Player = require('../../models/Player.js');
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -18,7 +21,8 @@ module.exports = {
         
         
         try{
-            questions = shuffleArray(questions);
+            shuffleArray(questions)
+            
             let ignoredCount = 0;
             let answeredUsers = new Set();
 
@@ -26,7 +30,8 @@ module.exports = {
                 sessions[interaction.guild.id] = {
                     channel: interaction.channel.id,
                     qIndex: 0,
-                    session: {}
+                    session: {},
+                    levelUps: []
                 };
             }
             else{
@@ -46,9 +51,11 @@ module.exports = {
             }
             if (!sessions[interaction.guild.id].session[interaction.user.id]) {
                     sessions[interaction.guild.id].session[interaction.user.id] = {
+                    userId: interaction.user.id,
                     username: interaction.user.username,
                     points: 0,
-                    newExp: 0
+                    newExp: 0,
+                    isInitiator: true
                 };
             }
             await interaction.reply("New Quiz Started!");
@@ -104,10 +111,12 @@ module.exports = {
                     }
 
                     if (!sessions[i.guild.id].session[i.user.id]) {
-                            sessions[i.guild.id].session[interaction.user.id] = {
+                            sessions[i.guild.id].session[i.user.id] = {
+                            userId: i.user.id,
                             username: i.user.username,
                             points: 0,
-                            newExp: 0
+                            newExp: 0,
+                            isInitiator: false
                         };
                     }
                     
@@ -127,8 +136,9 @@ module.exports = {
                         sessions[interaction.guild.id].session[i.user.id].newExp += addExp;
 
                         
-                        sortSessionByScores(sessions[interaction.guild.id].session)
-                        let scorearr = Object.entries(sessions[interaction.guild.id].session);
+                        
+                        
+                        let scorearr = Object.entries(sortSessionByScores(sessions[interaction.guild.id].session));
                         let scoarboardText = `<@${i.user.id}> gave the right answer and earned 10 points (+${addExp} Exp)! :sparkles:\n\n\n**Current Scoreboard**`;
                         for (let i = 0; i < scorearr.length; i++){
                             if(i == 0){
@@ -177,6 +187,7 @@ module.exports = {
                 });
 
                 collector.on('end', async () => {
+                    
                     buttons.forEach(button => button.setDisabled(true));
                     row = new ActionRowBuilder().addComponents(buttons);
                     await reply.edit({ components: [row] });
@@ -184,10 +195,81 @@ module.exports = {
                      if(ignoredCount == 2){
                          if(timeLeft <= 5){
                              
-                             sortSessionByScores(sessions[interaction.guild.id].session)
-                             let scorearr = Object.entries(sessions[interaction.guild.id].session);
+                             
+                             
+                             let scorearr = Object.entries(sortSessionByScores(sessions[interaction.guild.id].session));
                              let scoarboardText = `3 questions weren't answered consequtively, the quiz session has ended! :sparkles:\n\n\n**Final Scoreboard**`;
                              for (let i = 0; i < scorearr.length; i++){
+                                 const query = {
+                                     userId:  scorearr[i][1].userId,
+                                     guildId: interaction.guild.id
+                                 }
+                                  const playerQuery = {
+                                      userId: scorearr[i][1].userId
+                                  }
+                                  const player = await Player.findOne(playerQuery);
+                                 const level = await Level.findOne(query);
+                                 if(player){
+                                    player.exp += scorearr[i][1].newExp;
+                                    player.totalExp += scorearr[i][1].newExp
+                                    player.score += scorearr[i][1].points;
+                                    if(player.exp >= player.targetExp){
+                                        player.level++;
+                                        player.exp = player.exp - player.targetExp;
+                                        player.targetExp += Math.min(player.level * 200, 3000)
+                                        const sessionEndEmbed = new EmbedBuilder()
+                                              .setTitle('Leveled Up! (Globally)')
+                                              .setThumbnail('https://png.pngtree.com/png-vector/20210225/ourmid/pngtree-game-level-up-with-star-design-png-image_2953821.jpg')
+                                              .setFooter({ text: `Congratulations!`, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 1024 }) })
+                                              .setColor(0xFABCA7)
+                                              .setTimestamp(Date.now())
+                                              .setDescription(`<@${scorearr[i][1].userId}> has leveled up to level ${player.level}! :tada:`);
+                                        sessions[interaction.guild.id].levelUps.push(sessionEndEmbed);
+                                          
+                                    }
+                                    await player.save().catch(err => console.log(err));
+                                 }
+                                 else{
+                                     const newPlayer = new Player({
+                                         userId: scorearr[i][1].userId,
+                                         exp: scorearr[i][1].newExp,
+                                         totalExp: scorearr[i][1].newExp,
+                                         score: scorearr[i][1].points
+                                     })
+                                     await newPlayer.save().catch(err => console.log(err));
+                                 }
+                                 if(level){
+                                     level.exp += scorearr[i][1].newExp;
+                                     level.totalExp += scorearr[i][1].newExp
+                                     level.score += scorearr[i][1].points;
+                                     if(level.exp >= level.targetExp){
+                                         level.level++;
+                                         level.exp = level.exp - level.targetExp;
+                                         level.targetExp += Math.min(level.level * 200, 3000);
+                                         const sessionEndEmbed = new EmbedBuilder()
+                                               .setTitle(`Leveled Up! (In ${interaction.guild.name})`)
+                                               .setThumbnail('https://png.pngtree.com/png-vector/20210225/ourmid/pngtree-game-level-up-with-star-design-png-image_2953821.jpg')
+                                               .setFooter({ text: `Congratulations!`, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 1024 }) })
+                                               .setColor(0xFABCA7)
+                                               .setTimestamp(Date.now())
+                                               .setDescription(`<@${scorearr[i][1].userId}> has leveled up to level ${level.level}! :tada:`);
+                                         sessions[interaction.guild.id].levelUps.push(sessionEndEmbed);
+                                     }
+                                     await level.save().catch(err => console.log(err));
+                                 }
+                                 else{
+                                      const newLevel = new Level({
+                                           userId: scorearr[i][1].userId,
+                                          guildId: interaction.guild.id,
+                                          exp: scorearr[i][1].newExp,
+                                          totalExp: scorearr[i][1].newExp,
+                                          score: scorearr[i][1].points
+                                      })
+                                      await newLevel.save().catch(err => console.log(err));
+                                  }
+
+                                 
+                                 
                                  if(i == 0){
                                      scoarboardText += `\n\n:first_place: <@${scorearr[i][0]}> - ${scorearr[i][1].points} points`;
                                  }
@@ -210,6 +292,7 @@ module.exports = {
                                   .setTimestamp(Date.now())
                                   .setDescription(scoarboardText);
                               await channel.send({ embeds: [sessionEndEmbed]});
+                              sessions[interaction.guild.id].levelUps.forEach(emb => channel.send({ embeds: [emb] }))
                               delete sessions[interaction.guild.id];
                           }
                      }
@@ -222,7 +305,9 @@ module.exports = {
                                  .setColor(0xFABCA7)
                                  .setTimestamp(Date.now())
                                  .setDescription(`The time is over for the previous question! :timer: No one gave any right answer!`);
-                             ignoredCount++;
+                             if(answeredUsers.size == 0){
+                                 ignoredCount++;
+                             }
                              sessions[interaction.guild.id].qIndex++;
                              await channel.send({ embeds: [timesUpEmbed]});
                          }
