@@ -3,9 +3,21 @@ const Inventory = require('../../models/Inventory.js');
 
 
 module.exports = {
-    name: "shop",
-    aliases: ['wallet'],
-    description: 'Shows your wallet',
+    name: 'shop',
+    description: 'Buy badges and backgrounds!',
+    options: [
+            {
+                type: 1, // 1 is for a subcommand
+                name: 'badges',
+                description: 'Buy badges',
+            },
+            {
+                type: 1, // 1 is for a subcommand
+                name: 'backgrounds',
+                description: 'Buy backgrounds',
+            }
+        ],
+    
     callback: async (client, interaction) => {
 
         try{
@@ -13,14 +25,12 @@ module.exports = {
                 userId: interaction.user.id
             })
             if(inventory){
-                const walletEmbed = new EmbedBuilder()
-
-                walletEmbed.setTitle(`${interaction.user.globalName}'s Wallet`)
-                           .setDescription(`**Coins:** ${inventory.coins}\n\n`)
-                           .setColor(0xFABCA7)
-                           .setTimestamp(Date.now())
-
-                await interaction.reply({ embeds: [walletEmbed] , ephemeral: true})
+                const subcommand = interaction.options.getSubcommand();
+                if (subcommand === 'badges') {
+                    await interaction.reply('badges used');
+                } else if (subcommand === 'backgrounds') {
+                    await interaction.reply('background used');
+                }
             }
             else{
                 interaction.reply({content: "You haven't played any game yet! Please use /quizstart to start playing!", ephemeral: true})
