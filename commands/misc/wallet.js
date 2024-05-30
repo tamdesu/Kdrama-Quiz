@@ -16,7 +16,9 @@ module.exports = {
                 const walletEmbed = new EmbedBuilder()
 
                 walletEmbed.setTitle(`${interaction.user.globalName}'s Wallet`)
-                walletEmbed.setDescription(`**Coins:** ${inventory.coins}\n\n`)
+                           .setDescription(`**Coins:** ${inventory.coins}\n\n`)
+                           .setColor(0xFABCA7)
+                           .setTimestamp(Date.now())
 
                 await interaction.reply({ embeds: [walletEmbed] , ephemeral: true})
             }
