@@ -30,7 +30,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
         });
       });
 
-      backgroundImg = await loadImage(path.join(__dirname, './background.png'));
+      backgroundImg = await loadImage(path.join(__dirname, './backgrounds/background3.png'));
     } catch (error) {
       console.error('Error fetching images:', error);
       throw error;

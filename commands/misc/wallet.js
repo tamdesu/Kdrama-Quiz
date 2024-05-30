@@ -1,7 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 const Inventory = require('../../models/Inventory.js');
 const {emojis} = require('../../emoji.json');
-
+const { createCanvas, loadImage } = require('canvas');
+const path = require('path');
 module.exports = {
     name: "wallet",
     aliases: ['wallet'],
@@ -25,12 +26,21 @@ module.exports = {
                     const emoji = guild.emojis.cache.find(e => e.name === emojis[badge]);
                     walletText += `${emoji}  `;
                 }
+                walletText += "\n\n**Current Background:**\n"
+                const currentBGId = inventory.currentBackgroundId
+                const currentBG = await loadImage(path.join(__dirname, `../../imageBuilder/backgrounds/background${currentBGId}.png`))
+                const canvas = createCanvas(800, 400);
+                const ctx = canvas.getContext('2d');
+
+                // Draw the background
+                ctx.drawImage(currentBG, 0, 0, canvas.width, canvas.height);
                 walletEmbed.setTitle(`${interaction.user.globalName}'s Wallet`)
                            .setDescription(walletText)
                            .setColor(0xFABCA7)
+                           .setImage("attachment://current_background.png")
                            .setTimestamp(Date.now())
 
-                await interaction.reply({ embeds: [walletEmbed] , ephemeral: true})
+                await interaction.reply({ embeds: [walletEmbed], files:[{ attachment: canvas.toBuffer('image/png'), name: 'current_background.png' }] })
             }
             else{
                 interaction.reply({content: "You haven't played any game yet! Please use /quizstart to start playing!", ephemeral: true})

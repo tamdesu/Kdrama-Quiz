@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const path = require('path');
 ( async ()=>{
   try{
     await mongoose.connect(process.env.MONGO_URI);
