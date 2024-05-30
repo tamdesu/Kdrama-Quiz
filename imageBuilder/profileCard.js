@@ -3,7 +3,7 @@ const axios = require('axios');
 const path = require('path');
 const Jimp = require('jimp');
 
-const generateProfileCard = async ({ username, displayName, exp, totalExp, targetExp, guildName, avatarUrl, level, userBadges }) => {
+const generateProfileCard = async ({ username, displayName, exp, totalExp, targetExp, guildName, avatarUrl, level, userBadges, bgId }) => {
   try {
     // Fetch the image buffer using axios
     const fetchImageBuffer = async (url) => {
@@ -30,7 +30,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
         });
       });
 
-      backgroundImg = await loadImage(path.join(__dirname, './backgrounds/background3.png'));
+      backgroundImg = await loadImage(path.join(__dirname, `./backgrounds/background${bgId}.png`));
     } catch (error) {
       console.error('Error fetching images:', error);
       throw error;
@@ -121,7 +121,7 @@ const generateProfileCard = async ({ username, displayName, exp, totalExp, targe
     ctx.fillText("Server: " + guildName , 100, 240);
 
     ctx.font = '14px Arial';
-    ctx.fillText(`Exp: ${exp}/${targetExp}`, 100, 280);
+    ctx.fillText(`Exp: ${exp} / ${targetExp}`, 100, 280);
     ctx.fillText(`Total Exp: ${totalExp}`, 620 - String(totalExp).length * 6, 280);
 
     ctx.font = '12px Arial';

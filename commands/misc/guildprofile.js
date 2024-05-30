@@ -46,7 +46,8 @@ module.exports = {
                         guildName: interaction.guild.name,
                         avatarUrl: avUrl,
                         level: player.level,
-                        userBadges: inventory.currentBadges
+                        userBadges: inventory.currentBadges,
+                        bgId: inventory.currentBackgroundId
                     });
                     
                     const cardEmbed = new EmbedBuilder()
