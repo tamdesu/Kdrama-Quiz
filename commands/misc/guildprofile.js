@@ -1,5 +1,6 @@
 const { EmbedBuilder, ApplicationCommandOptionType} = require('discord.js');
 const Level = require('../../models/Level.js');
+const Inventory = require('../../models/Inventory.js');
 const { generateProfileCard } = require('../../imageBuilder/profileCard.js');
 
 module.exports = {
@@ -22,8 +23,12 @@ module.exports = {
                 userId: user.id,
                 guildId: interaction.guild.id
             }
+            const inventoryQuery = {
+                userId: user.id
+            }
+            const inventory = await Inventory.findOne(inventoryQuery);
             const player = await Level.findOne(query);
-            if (player){
+            if (player && inventory){
                 await interaction.deferReply();
 
                 const av = user.displayAvatarURL({ format: 'png', size: 4096 });
@@ -40,7 +45,8 @@ module.exports = {
                         targetExp: player.targetExp,
                         guildName: interaction.guild.name,
                         avatarUrl: avUrl,
-                        level: player.level
+                        level: player.level,
+                        userBadges: inventory.badges
                     });
                     
                     const cardEmbed = new EmbedBuilder()
