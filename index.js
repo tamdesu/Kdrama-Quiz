@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 3000;
       intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.GuildEmojisAndStickers
       ],
     });
 

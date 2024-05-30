@@ -1,0 +1,58 @@
+{
+  "badges":{
+    "cake":{
+      "name": "Cake",
+      "price": 100,
+      "requiredLevel": 2,
+       "emoji": "cake1"
+    },
+    "donut":{
+      "name": "Donut",
+      "price": 100,
+      "requiredLevel": 1,
+      "emoji": "donut"
+    },
+    "lolipop":{
+      "name": "Lolipop",
+      "price": 100,
+      "requiredLevel": 2,
+      "emoji": "lolipop"
+    },
+    "milk": {
+      "name": "Milk",
+      "price": 100,
+      "requiredLevel": 1,
+      "emoji": "milk1"
+    },
+    "mochi": {
+      "name": "Mochi",
+      "price": 100,
+      "requiredLevel": 3,
+      "emoji": "mochi"
+    },
+    "nekocoffee":{
+      "name": "Nekocoffee",
+      "price": 100,
+      "requiredLevel": 3,
+      "emoji": "nekocoffee"
+    },
+    "laptop":{
+      "name": "laptop",
+      "price": 100,
+      "requiredLevel": 1,
+      "emoji": "laptop"
+    },
+    "sakura": {
+      "name": "Sakura",
+      "price": 100,
+      "requiredLevel": 3,
+      "emoji": "sakura2"
+    },
+    "sword":{
+      "name": "Sword",
+      "price": 100,
+      "requiredLevel": 1,
+      "emoji": "sword"
+    }
+  }
+}
