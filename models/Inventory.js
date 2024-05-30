@@ -20,6 +20,10 @@ const inventorySchema = new Schema({
   badges:{
     type: [String],
     default: ["star"]
+  },
+  currentBadges:{
+    type: [String],
+    default: ["star"]
   }
 })
 module.exports = model('Inventory', inventorySchema)
