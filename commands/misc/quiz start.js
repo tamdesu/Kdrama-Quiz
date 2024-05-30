@@ -4,7 +4,7 @@ const {sessions} = require('../../session.json');
 var {questions} = require('../../questions.json');
 const Level = require('../../models/Level.js');
 const Player = require('../../models/Player.js');
-
+const Inventory = require('../../models/Inventory.js');
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -207,23 +207,48 @@ module.exports = {
                                   const playerQuery = {
                                       userId: scorearr[i][1].userId
                                   }
-                                  const player = await Player.findOne(playerQuery);
+                                 const inventoryQuery = {
+                                     userId: scorearr[i][1].userId
+                                 }
+                                const player = await Player.findOne(playerQuery);
                                  const level = await Level.findOne(query);
+                                 const inventory = await Inventory.findOne(inventoryQuery);
+                                 
+                                 if(!inventory){
+                                     const newInventory = new Inventory({
+                                           userId: scorearr[i][1].userId,
+                                       })
+                                     await newInventory.save().catch(err => console.log(err));
+                                 }
                                  if(player){
                                     player.exp += scorearr[i][1].newExp;
                                     player.totalExp += scorearr[i][1].newExp
                                     player.score += scorearr[i][1].points;
                                     if(player.exp >= player.targetExp){
                                         player.level++;
+                                        
                                         player.exp = player.exp - player.targetExp;
                                         player.targetExp += Math.min(player.level * 200, 3000)
+
+                                        if(inventory){
+                                            inventory.coins += player.level * 30;
+                                            await inventory.save().catch(err => console.log(err));
+                                        }
+                                        else{
+                                            const newInventory = new Inventory({
+                                                  userId: scorearr[i][1].userId,
+                                                  coins: player.level * 30
+                                              })
+                                            await newInventory.save().catch(err => console.log(err));
+                                        }
+                                        
                                         const sessionEndEmbed = new EmbedBuilder()
                                               .setTitle('Leveled Up! (Globally)')
                                               .setThumbnail('https://png.pngtree.com/png-vector/20210225/ourmid/pngtree-game-level-up-with-star-design-png-image_2953821.jpg')
                                               .setFooter({ text: `Congratulations!`, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 1024 }) })
                                               .setColor(0xFABCA7)
                                               .setTimestamp(Date.now())
-                                              .setDescription(`<@${scorearr[i][1].userId}> has leveled up to level ${player.level}! :tada:`);
+                                              .setDescription(`<@${scorearr[i][1].userId}> has leveled up to level ${player.level}! :tada: and earned ${player.level * 30} coins! :sparkles:`);
                                         sessions[interaction.guild.id].levelUps.push(sessionEndEmbed);
                                           
                                     }
@@ -246,13 +271,26 @@ module.exports = {
                                          level.level++;
                                          level.exp = level.exp - level.targetExp;
                                          level.targetExp += Math.min(level.level * 200, 3000);
+
+                                         if(inventory){
+                                             inventory.coins += level.level * 20;
+                                             await inventory.save().catch(err => console.log(err));
+                                         }
+                                         else{
+                                             const newInventory = new Inventory({
+                                                   userId: scorearr[i][1].userId,
+                                                   coins: level.level * 20
+                                               })
+                                         await newInventory.save().catch(err => console.log(err));
+                                         }
+                                         
                                          const sessionEndEmbed = new EmbedBuilder()
                                                .setTitle(`Leveled Up! (In ${interaction.guild.name})`)
                                                .setThumbnail('https://png.pngtree.com/png-vector/20210225/ourmid/pngtree-game-level-up-with-star-design-png-image_2953821.jpg')
                                                .setFooter({ text: `Congratulations!`, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 1024 }) })
                                                .setColor(0xFABCA7)
                                                .setTimestamp(Date.now())
-                                               .setDescription(`<@${scorearr[i][1].userId}> has leveled up to level ${level.level}! :tada:`);
+                                               .setDescription(`<@${scorearr[i][1].userId}> has leveled up to level ${level.level}! :tada: and earned ${level.level * 20} coins! :sparkles:`);
                                          sessions[interaction.guild.id].levelUps.push(sessionEndEmbed);
                                      }
                                      await level.save().catch(err => console.log(err));

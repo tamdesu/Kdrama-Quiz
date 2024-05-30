@@ -16,7 +16,7 @@ const playerSchema = new Schema({
   targetExp:{
     type: Number,
     default: 600
-  },
+  }, 
   score:{
     type: Number,
     default: 0
