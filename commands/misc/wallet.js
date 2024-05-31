@@ -16,7 +16,7 @@ module.exports = {
             if(inventory){
                 const guild = await client.guilds.fetch("1244352964609441852");
                 const walletEmbed = new EmbedBuilder()
-                walletText = `**Coins:** ${inventory.coins} :coin:\n\n**Badges:**\n`
+                let walletText = `**Coins:** ${inventory.coins} :coin:\n\n**Badges:**\n`
                 for(const badge of inventory.badges){
                     const emoji = guild.emojis.cache.find(e => e.name === emojis[badge]);
                     walletText += `${emoji}  `;
