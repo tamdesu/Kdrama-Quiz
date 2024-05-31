@@ -96,6 +96,17 @@ module.exports = {
                           level.exp += scorearr[i][1].newExp;
                           level.totalExp += scorearr[i][1].newExp
                           level.score += scorearr[i][1].points;
+                          if(inventory){
+                               inventory.coins += (scorearr[i][1].points / 10);
+                               await inventory.save().catch(err => console.log(err));
+                           }
+                           else{
+                               const newInventory = new Inventory({
+                                     userId: scorearr[i][1].userId,
+                                     coins: (scorearr[i][1].points / 10)
+                                 })
+                               await newInventory.save().catch(err => console.log(err));
+                           }
                           if(level.exp >= level.targetExp){
                               level.level++;
                               level.exp = level.exp - level.targetExp;

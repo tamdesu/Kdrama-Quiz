@@ -21,97 +21,97 @@ module.exports = {
 
     callback: async (client, interaction) => {
         try {
-            var shop;
-            var currentProducts;
-            const player = await Player.findOne({
-                userId: interaction.user.id
-            });
-            const inventory = await Inventory.findOne({
-                userId: interaction.user.id
-            });
+            const player = await Player.findOne({ userId: interaction.user.id });
+            const inventory = await Inventory.findOne({ userId: interaction.user.id });
 
-            if (player && inventory) {
-                const subcommand = interaction.options.getSubcommand();
-                if (subcommand === 'badges') {
-                    shop = badges;
-                    currentProducts = inventory.badges;
-                } else if (subcommand === 'backgrounds') {
-                    shop = backgrounds;
-                    currentProducts = inventory.backgrounds;
+            if (!player || !inventory) {
+                return interaction.reply({ content: "You haven't played any game yet! Please use /quizstart to start playing!", ephemeral: true });
+            }
+
+            const subcommand = interaction.options.getSubcommand();
+            const shop = subcommand === 'badges' ? badges : backgrounds;
+            const currentProducts = subcommand === 'badges' ? inventory.badges : inventory.backgrounds;
+
+            let pageNo = 0;
+            const shopArr = Object.entries(shop);
+
+            const updateShopPage = () => {
+                const item = shopArr[pageNo][1];
+                return `Name: ${item.name}\n\nPrice: ${item.price}\n\nRequired Level: ${item.requiredLevel}\n\nYour balance: ${inventory.coins}\n `;
+            };
+
+            const shopEmbed = new EmbedBuilder()
+                .setTitle('Shop')
+                .setColor(0xFABCA7)
+                .setDescription(updateShopPage())
+                .setTimestamp(Date.now())
+                .setThumbnail(shopArr[pageNo][1].thumbnail)
+                .setFooter({ text: `Page ${pageNo + 1}`, iconURL: interaction.user.displayAvatarURL() });
+
+            const updateButtons = () => {
+                const item = shopArr[pageNo][1];
+
+                const buyButton = new ButtonBuilder()
+                    .setCustomId('buy')
+                    .setLabel(`Buy (${item.price})`)
+                    .setEmoji('🪙')
+                    .setStyle(ButtonStyle.Success);
+
+                if (currentProducts.includes(item.id) || player.level < item.requiredLevel || inventory.coins < item.price) {
+                    buyButton.setDisabled(true);
                 }
 
-                var pageNo = 0;
-                const shopArr = Object.entries(shop);
+                const nextButton = new ButtonBuilder()
+                    .setCustomId('next')
+                    .setLabel('Next')
+                    .setStyle(ButtonStyle.Primary);
 
-                const updateShopPage = () => {
+                return new ActionRowBuilder().addComponents(buyButton, nextButton);
+            };
+
+            let shopButtons = updateButtons();
+            const reply = await interaction.reply({ embeds: [shopEmbed], components: [shopButtons], fetchReply: true });
+
+            const filter = i => i.user.id === interaction.user.id;
+            const collector = reply.createMessageComponentCollector({ componentType: ComponentType.Button, filter, time: 90000 });
+
+            collector.on('collect', async i => {
+                if (i.customId === 'buy') {
                     const item = shopArr[pageNo][1];
-                    return `Name: ${item.name}\n\nPrice: ${item.price}\n\nRequired Level: ${item.requiredLevel}\n\nYour balance: ${inventory.coins}\n `;
-                };
+                    currentProducts.push(item.id); // Update the user's inventory with the new purchase
+                    inventory.coins -= item.price; // Deduct the cost from the user's balance
+                    await inventory.save();
 
-                // Shop embed
-                const shopEmbed = new EmbedBuilder()
-                    .setTitle('Shop')
-                    .setColor('Random')
-                    .setDescription(updateShopPage())
-                    .setTimestamp(Date.now())
-                    .setThumbnail(shopArr[pageNo][1].thumbnail)
-                    .setFooter({ text: `Page ${pageNo + 1}`, iconURL: interaction.user.displayAvatarURL() });
+                    // Update the buttons after purchase
+                    shopButtons = updateButtons();
+                    shopEmbed.setDescription(updateShopPage());
+                    await reply.edit({ embeds: [shopEmbed], components: [shopButtons] });
 
-                // Shop buttons
-                const updateButtons = () => {
-                    const item = shopArr[pageNo][1];
-                    const emoji = interaction.guild.emojis.cache.find(e => e.name === item.emoji);
-                    const buyButton = new ButtonBuilder()
-                        .setCustomId('buy')
-                        .setLabel(`Buy (${item.price} 🪙)`)
-                        .setEmoji(emoji)
-                        .setStyle(ButtonStyle.Success);
-
-                    if (currentProducts.includes(item.id) || player.level < item.requiredLevel || inventory.coins < item.price) {
-                        buyButton.setDisabled(true);
+                    await i.reply({ content: `You have successfully bought ${item.name} for ${item.price}`, ephemeral: true });
+                } else if (i.customId === 'next') {
+                    pageNo++;
+                    if (pageNo >= shopArr.length) {
+                        pageNo = 0;
                     }
 
-                    const nextButton = new ButtonBuilder()
-                        .setCustomId('next')
-                        .setLabel('Next')
-                        .setStyle(ButtonStyle.Primary);
+                    shopEmbed.setDescription(updateShopPage())
+                        .setThumbnail(shopArr[pageNo][1].thumbnail)
+                        .setFooter({ text: `Page ${pageNo + 1}`, iconURL: interaction.user.displayAvatarURL() });
 
-                    return new ActionRowBuilder().addComponents(buyButton, nextButton);
-                };
+                    shopButtons = updateButtons();
+                    await i.update({ embeds: [shopEmbed], components: [shopButtons] });
+                }
+            });
 
-                const shopButtons = updateButtons();
-                const reply = await interaction.reply({ embeds: [shopEmbed], components: [shopButtons], fetchReply: true });
-
-                const filter = i => i.user.id === interaction.user.id;
-                const collector = reply.createMessageComponentCollector({ componentType: ComponentType.Button, filter, time: 360000 });
-
-                collector.on('collect', async i => {
-                    if (i.customId === 'buy') {
-                        await i.reply({ content: `You have successfully bought ${shopArr[pageNo][1].name} for ${shopArr[pageNo][1].price}`, ephemeral: true });
-                    } else if (i.customId === 'next') {
-                        pageNo++;
-                        if (pageNo >= shopArr.length) {
-                            pageNo = 0;
-                        }
-
-                        shopEmbed.setDescription(updateShopPage())
-                            .setFooter({ text: `Page ${pageNo + 1}`, iconURL: interaction.user.displayAvatarURL() });
-
-                        const newShopButtons = updateButtons();
-                        await i.update({ embeds: [shopEmbed], components: [newShopButtons] });
-                    }
-                });
-
-                collector.on('end', async () => {
-                    const finalButtons = new ActionRowBuilder().addComponents(
-                        new ButtonBuilder(shopButtons.components[0]).setDisabled(true),
-                        new ButtonBuilder(shopButtons.components[1]).setDisabled(true)
-                    );
-                    await reply.edit({ embeds: [shopEmbed], components: [finalButtons] });
-                });
-            } else {
-                await interaction.reply({ content: "You haven't played any game yet! Please use /quizstart to start playing!", ephemeral: true });
-            }
+            collector.on('end', async () => {
+                const finalButtons = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder(shopButtons.components[0]).setDisabled(true).setLabel('Buy (' + shopArr[pageNo][1].price + ')').setEmoji('🪙')
+                    .setStyle(ButtonStyle.Success).setCustomId('disabled-buy'),
+                    new ButtonBuilder(shopButtons.components[1]).setDisabled(true).setLabel('Next')
+                    .setStyle(ButtonStyle.Primary).setCustomId('disabled-next')
+                );
+                await reply.edit({ embeds: [shopEmbed], components: [finalButtons] });
+            });
         } catch (err) {
             console.error(err);
             await interaction.reply({ content: "There has been an error! Please try using the command again", ephemeral: true });

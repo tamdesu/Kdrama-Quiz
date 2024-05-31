@@ -1,5 +1,13 @@
 {
   "badges":{
+    "star":{
+      "name": "Star",
+      "price": 0,
+      "requiredLevel": 0,
+       "emoji": "star1",
+      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774140229550151/star.png?ex=665aa1d4&is=66595054&hm=4de3e34af8d6c3d01d7d4a0aa8cb413a694aaf1fd9fb112d7e3dfc0a5d703bf2&",
+      "id": "star"
+    },
     "cake":{
       "name": "Cake",
       "price": 100,
@@ -71,9 +79,50 @@
       "emoji": "sword",
       "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774140443725924/sword_3.png?ex=665aa1d4&is=66595054&hm=4b3c405a3aef16ad55d84a09487b77c4d640c1794aadd00e6f897c7b42098f9d&",
       "id": "sword"
+    },
+    "moon":{
+      "name": "Moon",
+      "price": 100,
+      "requiredLevel": 2,
+      "emoji": "moon",
+      "thumbnail": "https://cdn.discordapp.com/attachments/1044964923614171166/1246122287799861298/moon.png?ex=665b3d51&is=6659ebd1&hm=415dacf5c4a17b209dbdb6eb27c83ef31d69a01986ed0fcc7aeae6c1791a6683&",
+      "id": "moon"
+    },
+    "clover":{
+      "name": "Clover",
+      "price": 100,
+      "requiredLevel": 1,
+      "emoji": "clover",
+      "thumbnail": "https://cdn.discordapp.com/attachments/1044964923614171166/1246122410781053139/clover.png?ex=665b3d6e&is=6659ebee&hm=167258acea41836725de03cc1cef60ac6270b41672c8b04db970c467a8f9a9e4&",
+      "id": "clover"
+    },
+    "neko":{
+      "name": "Neko",
+      "price": 100,
+      "requiredLevel": 1,
+      "emoji": "neko",
+      "thumbnail": "https://cdn.discordapp.com/attachments/1044964923614171166/1246122531144859802/cat.png?ex=665b3d8b&is=6659ec0b&hm=dcf641ac5c4e2f2909fd75fa6033507b4a8f69888b65d6f369dd020e53ec5d30&",
+      "id": "neko"
+    },
+    "pinaple":{
+      "name": "Pinaple",
+      "price": 100,
+      "requiredLevel": 1,
+      "emoji": "pinaple",
+      "thumbnail": "https://cdn.discordapp.com/attachments/1244353382190288987/1246133066531864606/pinaple.png?ex=665b475b&is=6659f5db&hm=69a1c1477750198a5e04da682b7381f80ea7d76143031149a0b5bf47a86aa74d&",
+      "id": "pinaple"
     }
+    
   },
   "backgrounds":{
+    "background0":{
+      "name": "Background 0",
+      "price": 0,
+      "requiredLevel": 0,
+      "emoji": "bg0",
+      "thumbnail": "https://cdn.discordapp.com/attachments/1245303294881042443/1245303328028495904/pastel-blue-aesthetic-tumblr-tcbr5k9uhh581buy.png?ex=665a3cda&is=6658eb5a&hm=0ed722bac811e48883d8e91b110b56f321b9cd53032ea755c01b94c9933ddf7f&",
+      "id": 0
+    },
     "background1":{
       "name": "Background 1",
       "price": 600,
