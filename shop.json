@@ -5,7 +5,7 @@
       "price": 0,
       "requiredLevel": 0,
        "emoji": "star1",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774140229550151/star.png?ex=665aa1d4&is=66595054&hm=4de3e34af8d6c3d01d7d4a0aa8cb413a694aaf1fd9fb112d7e3dfc0a5d703bf2&",
+      "thumbnail": "star.png",
       "id": "star"
     },
     "cake":{
@@ -13,7 +13,7 @@
       "price": 100,
       "requiredLevel": 2,
        "emoji": "cake1",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774138291781723/cake_1.png?ex=665aa1d3&is=66595053&hm=32f9288a3a16832516f6dd53540eceef856207cdd2eb5d49750af60acd99cf66&",
+      "thumbnail": "cake.png",
       "id": "cake"
     },
     "donut":{
@@ -21,7 +21,7 @@
       "price": 100,
       "requiredLevel": 1,
       "emoji": "donut",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774484032458822/donut.png?ex=665aa226&is=665950a6&hm=7dc46e0e18c2c44cd1a17f18c7f9ae7796867cd33c46b13a3e5901fe62f8c49f&",
+      "thumbnail": "donut.png",
       "id": "donut"
     },
     "lolipop":{
@@ -29,7 +29,7 @@
       "price": 100,
       "requiredLevel": 2,
       "emoji": "lolipop",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774138761805974/lolipop.png?ex=665aa1d4&is=66595054&hm=98e9df5b7a31e1c1d8eb3c8de5bf8b582bfc9e0d7043b4a2d48572f1cd105e1c&",
+      "thumbnail": "lolipop.png",
       "id": "lolipop"
     },
     "milk": {
@@ -37,7 +37,7 @@
       "price": 100,
       "requiredLevel": 1,
       "emoji": "milk1",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774139000885248/milk2.png?ex=665aa1d4&is=66595054&hm=7ce9e1d5fd81c6d5463aa4206d3d54aa48e006752e2eb6166658591c8580b533&",
+      "thumbnail": "milk.png",
       "id": "milk"
     },
     "mochi": {
@@ -45,7 +45,7 @@
       "price": 100,
       "requiredLevel": 3,
       "emoji": "mochi",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774139256606720/mochi.png?ex=665aa1d4&is=66595054&hm=452244d37a32adbae99387667fba8f5d80ad1bd52cf9e1f27e0f6c4908d9e648&",
+      "thumbnail": "mochi.png",
       "id": "mochi"
     },
     "nekocoffee":{
@@ -53,7 +53,7 @@
       "price": 100,
       "requiredLevel": 3,
       "emoji": "nekocoffee",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774139449409596/nekocoffe.png?ex=665aa1d4&is=66595054&hm=af90126822840b2ca897d4d944dbad3078e531ab281cc633bc54ffc6ffe144e2&",
+      "thumbnail": "nekocoffee.png",
       "id": "nekocoffee"
     },
     "laptop":{
@@ -61,7 +61,7 @@
       "price": 100,
       "requiredLevel": 1,
       "emoji": "laptop",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774138514083991/laptop.png?ex=665aa1d3&is=66595053&hm=cf6efac04ca2ce8a6e4503890d1166d35db62406977136de315d052b00a52f2c&",
+      "thumbnail": "laptop.png",
       "id": "laptop"
     },
     "sakura": {
@@ -69,7 +69,7 @@
       "price": 100,
       "requiredLevel": 3,
       "emoji": "sakura2",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774140049330186/sakura2.png?ex=665aa1d4&is=66595054&hm=dff343374a05c2067e2ecdc1cc2fb6406bffbd61ad03db2500f3bd981ab902c6&",
+      "thumbnail": "sakura.png",
       "id": "sakura"
     },
     "sword":{
@@ -77,7 +77,7 @@
       "price": 100,
       "requiredLevel": 1,
       "emoji": "sword",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245015570848677938/1245774140443725924/sword_3.png?ex=665aa1d4&is=66595054&hm=4b3c405a3aef16ad55d84a09487b77c4d640c1794aadd00e6f897c7b42098f9d&",
+      "thumbnail": "sword.png",
       "id": "sword"
     },
     "moon":{
@@ -85,7 +85,7 @@
       "price": 100,
       "requiredLevel": 2,
       "emoji": "moon",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1044964923614171166/1246122287799861298/moon.png?ex=665b3d51&is=6659ebd1&hm=415dacf5c4a17b209dbdb6eb27c83ef31d69a01986ed0fcc7aeae6c1791a6683&",
+      "thumbnail": "moon.png",
       "id": "moon"
     },
     "clover":{
@@ -93,7 +93,7 @@
       "price": 100,
       "requiredLevel": 1,
       "emoji": "clover",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1044964923614171166/1246122410781053139/clover.png?ex=665b3d6e&is=6659ebee&hm=167258acea41836725de03cc1cef60ac6270b41672c8b04db970c467a8f9a9e4&",
+      "thumbnail": "clover.png",
       "id": "clover"
     },
     "neko":{
@@ -101,7 +101,7 @@
       "price": 100,
       "requiredLevel": 1,
       "emoji": "neko",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1044964923614171166/1246122531144859802/cat.png?ex=665b3d8b&is=6659ec0b&hm=dcf641ac5c4e2f2909fd75fa6033507b4a8f69888b65d6f369dd020e53ec5d30&",
+      "thumbnail": "neko.png",
       "id": "neko"
     },
     "pinaple":{
@@ -109,8 +109,24 @@
       "price": 100,
       "requiredLevel": 1,
       "emoji": "pinaple",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1244353382190288987/1246133066531864606/pinaple.png?ex=665b475b&is=6659f5db&hm=69a1c1477750198a5e04da682b7381f80ea7d76143031149a0b5bf47a86aa74d&",
+      "thumbnail": "pinaple.png",
       "id": "pinaple"
+    },
+    "yogurt":{
+      "name": "Yogurt",
+      "price": 100,
+      "requiredLevel": 2,
+      "emoji": "yogurt",
+      "thumbnail": "yogurt.png",
+      "id": "yogurt"
+    },
+    "cooky":{
+      "name": "Cooky (BT21)",
+      "price": 200,
+      "requiredLevel": 4,
+      "emoji": "cooky",
+      "thumbnail": "cooky.png",
+      "id": "cooky"
     }
     
   },
@@ -120,7 +136,7 @@
       "price": 0,
       "requiredLevel": 0,
       "emoji": "bg0",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245303294881042443/1245303328028495904/pastel-blue-aesthetic-tumblr-tcbr5k9uhh581buy.png?ex=665a3cda&is=6658eb5a&hm=0ed722bac811e48883d8e91b110b56f321b9cd53032ea755c01b94c9933ddf7f&",
+      "thumbnail": "background0.png",
       "id": 0
     },
     "background1":{
@@ -128,7 +144,7 @@
       "price": 600,
       "requiredLevel": 2,
       "emoji": "bg1",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245303294881042443/1245303400204210197/desktop-wallpaper-pastel-background-landscape-page-6-pastel-landscape-art.png?ex=665a3ceb&is=6658eb6b&hm=d4a8b70ce585a6bb4d79df3154186bb0e4a1a0a616366b468e319364bf457e53&",
+      "thumbnail": "background1.png",
       "id": 1
     },
     "background2":{
@@ -136,7 +152,7 @@
       "price": 600,
       "requiredLevel": 2,
       "emoji": "bg2",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245975534563753996/1245979795838337044/8f6rKCacAJQuwAAAAOZVhJZk1NACoAAAAIAAAAAAAAANJTkwAAAABJRU5ErkJggg.png?ex=665ab89c&is=6659671c&hm=48db404e3ded72be640d0f5af000ba34cbe4875c6342e75dc1a14086b970f125&",
+      "thumbnail": "background2.png",
       "id": 2
     },
     "background3":{
@@ -144,7 +160,7 @@
       "price": 800,
       "requiredLevel": 3,
       "emoji": "bg3",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245975534563753996/1245979602132795472/2Q.png?ex=665ab86e&is=665966ee&hm=48eb321c0684eb4242f4bf9eb887b710671e0b7567ac5f868d33eb08ad2c4646&",
+      "thumbnail": "background3.png",
       "id": 3
     },
     "background4":{
@@ -152,7 +168,7 @@
       "price": 800,
       "requiredLevel": 3,
       "emoji": "bg4",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245975534563753996/1245979414366388334/9k.png?ex=665ab841&is=665966c1&hm=48f5d0d9742db9c330e4c375ae33281ccd309664bf364b7a944b44cc27b9df1f&",
+      "thumbnail": "background4.png",
       "id": 4
     },
     "background5":{
@@ -160,7 +176,7 @@
       "price": 800,
       "requiredLevel": 3,
       "emoji": "bg5",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245975534563753996/1245979175840383078/2Q.png?ex=665ab808&is=66596688&hm=678a9e0e025dcf9260fc20527afd933109da93be2a4668dacdeab03a3ff97ec4&",
+      "thumbnail": "background5.png",
       "id": 5
     },
     "background6":{
@@ -168,7 +184,7 @@
       "price": 800,
       "requiredLevel": 3,
       "emoji": "bg6",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1245975534563753996/1245978752412946452/9k.png?ex=665ab7a3&is=66596623&hm=0a65be279e7761a62e78ad39cae86b9124aa61378ee6c577adfe14a3e007dd91&",
+      "thumbnail": "background6.png",
       "id": 6
     },
     "background7":{
@@ -176,8 +192,16 @@
       "price": 1200,
       "requiredLevel": 4,
       "emoji": "bg7",
-      "thumbnail": "https://cdn.discordapp.com/attachments/1244352964609441856/1245827556368715828/the-landscape-of-the-city-at-night-time-cityscape-with-houses-and-buildings-and-the-beautiful-night-sky-video-game-concept-art-with-anime-style-free-illustration-image-by-ai-generated-free-photo.png?ex=665a2ad3&is=6658d953&hm=050cc519e89388422e26978a0e257c31b5345dfb7ed059459f5c939086d095b1&",
+      "thumbnail": "background7.png",
       "id": 7
+    },
+    "background8":{
+      "name": "Background 8",
+      "price": 1800,
+      "requiredLevel": 4,
+      "emoji": "bg8",
+      "thumbnail": "background8.png",
+      "id": 8
     }
   }
 }

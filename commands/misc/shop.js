@@ -2,6 +2,8 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const Inventory = require('../../models/Inventory.js');
 const Player = require('../../models/Player.js');
 const { badges, backgrounds } = require('../../shop.json');
+const path = require('path');
+const fs = require('fs').promises;
 
 module.exports = {
     name: 'shop',
@@ -30,7 +32,18 @@ module.exports = {
 
             const subcommand = interaction.options.getSubcommand();
             const shop = subcommand === 'badges' ? badges : backgrounds;
+            const imagePath = subcommand === 'badges' ? path.join(__dirname, '../../imageBuilder/assets') : path.join(__dirname, '../../imageBuilder/backgrounds');
             const currentProducts = subcommand === 'badges' ? inventory.badges : inventory.backgrounds;
+
+            const getImage = async (filename) => {
+                try {
+                    const data = await fs.readFile(path.join(imagePath, filename));
+                    return data;
+                } catch (err) {
+                    console.error('Error reading the image file:', err);
+                    return null;
+                }
+            };
 
             let pageNo = 0;
             const shopArr = Object.entries(shop);
@@ -45,7 +58,6 @@ module.exports = {
                 .setColor(0xFABCA7)
                 .setDescription(updateShopPage())
                 .setTimestamp(Date.now())
-                .setThumbnail(shopArr[pageNo][1].thumbnail)
                 .setFooter({ text: `Page ${pageNo + 1}`, iconURL: interaction.user.displayAvatarURL() });
 
             const updateButtons = () => {
@@ -70,7 +82,19 @@ module.exports = {
             };
 
             let shopButtons = updateButtons();
-            const reply = await interaction.reply({ embeds: [shopEmbed], components: [shopButtons], fetchReply: true });
+            const imageBuffer = await getImage(shopArr[pageNo][1].thumbnail);
+            if (subcommand === 'badges') {
+                shopEmbed.setThumbnail('attachment://thumb.png');
+            } else {
+                shopEmbed.setImage('attachment://thumb.png');
+            }
+
+            const reply = await interaction.reply({
+                embeds: [shopEmbed],
+                components: [shopButtons],
+                files: [{ attachment: imageBuffer, name: 'thumb.png' }],
+                ephemeral: true
+            });
 
             const filter = i => i.user.id === interaction.user.id;
             const collector = reply.createMessageComponentCollector({ componentType: ComponentType.Button, filter, time: 90000 });
@@ -85,7 +109,13 @@ module.exports = {
                     // Update the buttons after purchase
                     shopButtons = updateButtons();
                     shopEmbed.setDescription(updateShopPage());
-                    await reply.edit({ embeds: [shopEmbed], components: [shopButtons] });
+                    const newImageBuffer = await getImage(shopArr[pageNo][1].thumbnail);
+                    await reply.edit({
+                        embeds: [shopEmbed],
+                        components: [shopButtons],
+                        files: [{ attachment: newImageBuffer, name: 'thumb.png' }],
+                        ephemeral: true
+                    });
 
                     await i.reply({ content: `You have successfully bought ${item.name} for ${item.price}`, ephemeral: true });
                 } else if (i.customId === 'next') {
@@ -94,23 +124,46 @@ module.exports = {
                         pageNo = 0;
                     }
 
-                    shopEmbed.setDescription(updateShopPage())
-                        .setThumbnail(shopArr[pageNo][1].thumbnail)
-                        .setFooter({ text: `Page ${pageNo + 1}`, iconURL: interaction.user.displayAvatarURL() });
+                    shopEmbed.setDescription(updateShopPage());
+                    if (subcommand === 'badges') {
+                        shopEmbed.setThumbnail('attachment://thumb.png');
+                    } else {
+                        shopEmbed.setImage('attachment://thumb.png');
+                    }
+                    shopEmbed.setFooter({ text: `Page ${pageNo + 1}`, iconURL: interaction.user.displayAvatarURL() });
 
                     shopButtons = updateButtons();
-                    await i.update({ embeds: [shopEmbed], components: [shopButtons] });
+                    const newImageBuffer = await getImage(shopArr[pageNo][1].thumbnail);
+                    await i.update({
+                        embeds: [shopEmbed],
+                        components: [shopButtons],
+                        files: [{ attachment: newImageBuffer, name: 'thumb.png' }],
+                        ephemeral: true
+                    });
                 }
             });
 
             collector.on('end', async () => {
                 const finalButtons = new ActionRowBuilder().addComponents(
-                    new ButtonBuilder(shopButtons.components[0]).setDisabled(true).setLabel('Buy (' + shopArr[pageNo][1].price + ')').setEmoji('🪙')
-                    .setStyle(ButtonStyle.Success).setCustomId('disabled-buy'),
-                    new ButtonBuilder(shopButtons.components[1]).setDisabled(true).setLabel('Next')
-                    .setStyle(ButtonStyle.Primary).setCustomId('disabled-next')
+                    new ButtonBuilder(shopButtons.components[0])
+                        .setDisabled(true)
+                        .setLabel('Buy (' + shopArr[pageNo][1].price + ')')
+                        .setEmoji('🪙')
+                        .setStyle(ButtonStyle.Success)
+                        .setCustomId('disabled-buy'),
+                    new ButtonBuilder(shopButtons.components[1])
+                        .setDisabled(true)
+                        .setLabel('Next')
+                        .setStyle(ButtonStyle.Primary)
+                        .setCustomId('disabled-next')
                 );
-                await reply.edit({ embeds: [shopEmbed], components: [finalButtons] });
+                const finalImageBuffer = await getImage(shopArr[pageNo][1].thumbnail);
+                await reply.edit({
+                    embeds: [shopEmbed],
+                    components: [finalButtons],
+                    files: [{ attachment: finalImageBuffer, name: 'thumb.png' }],
+                    ephemeral: true
+                });
             });
         } catch (err) {
             console.error(err);

@@ -1,5 +1,8 @@
 const Inventory = require('../../models/Inventory.js');
 const { backgrounds } = require('../../shop.json');
+const path = require('path');
+const fs = require('fs').promises;
+const { ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'setbackground',
@@ -13,7 +16,6 @@ module.exports = {
 
         // Fetch and format available background choices
         const availableBackgrounds = inventory.backgrounds.map(id => {
-
             // Correct the search within backgrounds object
             const bg = Object.values(backgrounds).find(background => background.id === id);
 
@@ -30,13 +32,7 @@ module.exports = {
             return interaction.reply({ content: "You don't have any backgrounds to set.", ephemeral: true });
         }
 
-        if (availableBackgrounds.length === 0) {
-            return interaction.reply({ content: "You don't have any backgrounds to set.", ephemeral: true });
-        }
-
         // Send a message with a dropdown menu to choose a background
-        const { ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder } = require('discord.js');
-
         const selectMenu = new StringSelectMenuBuilder()
             .setCustomId('select_background')
             .setPlaceholder('Select a background')
@@ -47,8 +43,9 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle('Select Background')
             .setDescription('Choose a background from the dropdown menu below.')
-            .setColor(0xFABCA7)
-       const reply = await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
+            .setColor(0xFABCA7);
+
+        const reply = await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
 
         // Handle the selection
         const filter = i => i.customId === 'select_background' && i.user.id === interaction.user.id;
@@ -64,8 +61,21 @@ module.exports = {
             await inventory.save();
 
             const background = Object.values(backgrounds).find(bg => bg.id === selectedBackgroundId);
-            await i.reply({ content: `Your background has been set to: ${background.name}`, files:[{ attachment: background.thumbnail, name: 'current_background.png' }],  ephemeral: true });
-            reply.delete()
+            const imagePath = path.join(__dirname, '../../imageBuilder/backgrounds', background.thumbnail);
+
+            try {
+                const imageBuffer = await fs.readFile(imagePath);
+                await i.reply({
+                    content: `Your background has been set to: ${background.name}`,
+                    files: [{ attachment: imageBuffer, name: 'current_background.png' }],
+                    ephemeral: true
+                });
+            } catch (err) {
+                console.error('Error reading the image file:', err);
+                await i.reply({ content: "There was an error setting your background. Please try again later.", ephemeral: true });
+            }
+
+            await reply.delete();
             collector.stop();
         });
 

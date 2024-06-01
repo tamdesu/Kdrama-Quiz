@@ -25,10 +25,12 @@ module.exports = {
             let leaderboardTitle;
             if(interaction.options.getSubcommand() === 'server'){
                 leaderboard = await Level.find({guildId: interaction.guild.id}).sort({totalExp: -1}).limit(10)
+                if(leaderboard.length === 0) return interaction.reply({content: "No one has played yet in this server", ephemeral: true})
                 leaderboardTitle = `Leaderboard for ${interaction.guild.name}`
             }
             else if(interaction.options.getSubcommand() === 'global'){
                 leaderboard = await Player.find().sort({totalExp: -1}).limit(10)
+                if(leaderboard.length === 0) return interaction.reply({content: "Seems like the bot hasn't been used by anyone", ephemeral: true})
                 leaderboardTitle = `Leaderboard Global`
             }
             let leaderboardDescription = ``;
@@ -40,6 +42,7 @@ module.exports = {
             .setTitle(leaderboardTitle)
             .setDescription(leaderboardDescription)
             .setColor(0xFABCA7)
+        .setThumbnail("https://cdn.discordapp.com/attachments/1245015570848677938/1246318083317170248/leaderboard-flat-icon-design-illustration-sports-and-games-symbol-on-white-background-eps-10-file-vector.png?ex=665bf3aa&is=665aa22a&hm=f07a7de86480f408bfdadc8d8f1221cb408d4b6442d9d5dc74646f6cc0acd0d5&")
             .setFooter({text: `Requested by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL()})
             .setTimestamp(Date.now())
 
